@@ -1,0 +1,56 @@
+{
+    "name": "optimal_function_approximation",
+    "n_gpu": 1,
+    "arch": {
+        "type": "DynamicModel",
+        "args": {
+            "num_hidden_layers": 3,
+            "hidden_sizes": [64, 32, 16],
+            "hidden_activation": "relu",
+            "output_activation": "linear"
+        }
+    },
+    "data_loader": {
+        "type": "FunctionDataLoader",
+        "args": {
+            "data_dir": "data/",
+            "batch_size": 32,
+            "shuffle": true,
+            "validation_split": 0.15,
+            "num_workers": 2,
+            "function": "harmonic",
+            "n_samples": 1000
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.001,
+            "weight_decay": 1e-4
+        }
+    },
+    "loss": "mse_loss",
+    "metrics": [
+        "mae_loss",
+        "r2_score",
+        "explained_variance"
+    ],
+    "lr_scheduler": {
+        "type": "ReduceLROnPlateau",
+        "args": {
+            "mode": "min",
+            "factor": 0.5,
+            "patience": 10,
+            "min_lr": 1e-6
+        }
+    },
+    "trainer": {
+        "epochs": 200,
+        "save_dir": "saved/",
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 20,
+        "tensorboard": true
+    }
+}
